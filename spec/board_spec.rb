@@ -3,14 +3,14 @@ require "board"
 describe Board do
   let(:instance) {Board.new}
   describe "#board" do
-    it "has a 10 by 20 board" do
+    it "has a 10 by 22 board" do
       expect(Board.new.board).to eq(Array.new(21){Array.new(10) {"_"}})
     end
   end
 
   describe "#add_peice" do 
     it "takes an input and makes it the current piece" do
-      instance.add_piece("squ", [0,1])
+      instance.add_piece("squ", 0)
       testcase = Array.new(10) {"_"}
       testcase[0] = "X"
       testcase[1] = "X"
@@ -24,12 +24,20 @@ describe Board do
       testcase[1] = "X"
       expect(instance.board[0]).to match_array(testcase)
     end
+
+    it "accepts an horizontal adjustment" do
+      instance.add_piece("squ", 3)
+      testcase = Array.new(10) {"_"}
+      testcase[3] = "X"
+      testcase[4] = "X"
+      expect(instance.board[0]).to eq(testcase)
+    end
   end
 
-  describe "#move_piece" do
+  describe "#move_piece_vertical" do
     it "it moves the piece down a level" do
       instance.add_piece("squ", 0)
-      instance.move_piece
+      instance.move_piece_vertical
       testcase = Array.new(10) {"_"}
       testcase[0] = "X"
       testcase[1] = "X"
@@ -38,30 +46,43 @@ describe Board do
 
     it "deletes the previous level" do
       instance.add_piece("squ", 0)
-      instance.move_piece
+      instance.move_piece_vertical
       expect(instance.board[0]).to match_array(Array.new(10) {"_"})
     end
 
     it "increases spaces moved by 1" do
       instance.add_piece("squ", 0)
-      expect{instance.move_piece}.to change{instance.spaces_moved}.by(1)
+      expect{instance.move_piece_vertical}.to change{instance.spaces_moved}.by(1)
     end
   end
 
   describe "#piece_done" do
-    it "sets current peice to none if 20 moves have happened" do
-      instance.current_piece = "test"
-      instance.spaces_moved = 20
+    it "sets current peice to none after it hits the bottom" do
+      instance.add_piece("squ", 0)
+      19.times {instance.move_piece_vertical}
       expect(instance.piece_done).to be_nil
     end
 
     it "replaces X's with O's" do
       instance.add_piece("squ", 0)
-      20.times {instance.move_piece}
+      19.times {instance.move_piece_vertical}
       testcase = Array.new(10) {"_"}
       testcase[0] = "O"
       testcase[1] = "O"
       expect(instance.board[20]).to match_array(testcase)
+    end
+
+    it "detects if we've hit another piece" do
+      instance.board[20][0] = "O"
+      instance.board[19][0] = "O"
+      instance.board[20][1] = "O"
+      instance.board[19][1] = "O"
+      instance.add_piece("squ", 0)
+      17.times {instance.move_piece_vertical}
+      testcase = Array.new(10) {"_"}
+      testcase[0] = "O"
+      testcase[1] = "O"
+      expect(instance.board[18]).to match_array(testcase)
     end
   end
 end
