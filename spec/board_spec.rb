@@ -85,4 +85,13 @@ describe Board do
       expect(instance.board[18]).to match_array(testcase)
     end
   end
+
+  describe "#row_delete" do
+    it "detects when one row is full and deletes it"
+
+    it "detects when more than one row is full and deletes them"
+
+    it "returns number of rows deleted"
+  end
+  
 end

@@ -1,9 +1,9 @@
 #to do
-#replace spaces moved with more elegant method
-#find a way to make the pieces stop if they hit "O" (a next row same index checker)
 #delete done rows
 #return a score
 #define lose state
+#implement a player who can make moves
+#once that's done we have tetris, sort of. Square tetris. Strtris
 #more pieces
 #rotation for pieces
 #player input and controls
@@ -97,6 +97,7 @@ class Board
   end
 
   def start_piece_conds
+    #resets the piece conditions to allow a new piece
     @current_piece = nil
     @spaces_moved = 0
   end
@@ -114,6 +115,7 @@ class Board
   end
 
   def get_columns
+    #returns an array containing the column values of the piece
     coordinates = access_piece
     columns = []
     coordinates.each do |pair|
