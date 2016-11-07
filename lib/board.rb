@@ -1,3 +1,15 @@
+#to do
+#replace spaces moved with more elegant method
+#find a way to make the pieces stop if they hit "O" (a next row same index checker)
+#delete done rows
+#return a score
+#more pieces
+#rotation for pieces
+#player input and controls
+#score system
+#music
+#realtime functionality
+
 class Board
   attr_accessor :board
   attr_accessor :current_piece
@@ -33,6 +45,7 @@ class Board
   end
 
   def move_piece
+    #need to add functionality to check for pieces existing already
     @spaces_moved += 1
     locations = access_piece
     locations.each do |coords|
@@ -48,8 +61,6 @@ class Board
       array.each_with_index do |entry, cell|
         if entry == "X"
           list_of_coords.push([20-row, cell])
-          # @board[20-row][cell] = "_" 
-          # @board[22-row][cell] = "X"
         end
       end
     end
@@ -58,12 +69,18 @@ class Board
 
   def piece_done
     if @spaces_moved == 20 
+      #need to check location rather than spaces moved
+      #add a "reached bottom" function or something
       locations = access_piece
       locations.each do |coords|
        @board[coords[0]][coords[1]] = "O"
       end
       @current_piece = nil
     end
+  end
+
+  def row_full?
+
   end
 end
 
@@ -72,3 +89,4 @@ boar = Board.new
 boar.add_piece("squ", [0,1])
 boar.move_piece
 boar.display
+
