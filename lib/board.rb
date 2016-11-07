@@ -3,12 +3,14 @@
 #find a way to make the pieces stop if they hit "O" (a next row same index checker)
 #delete done rows
 #return a score
+#define lose state
 #more pieces
 #rotation for pieces
 #player input and controls
 #score system
 #music
 #realtime functionality
+#try curse gem
 
 class Board
   attr_accessor :board
