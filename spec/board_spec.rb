@@ -47,4 +47,21 @@ describe Board do
       expect{instance.move_piece}.to change{instance.spaces_moved}.by(1)
     end
   end
+
+  describe "#piece_done" do
+    it "sets current peice to none if 20 moves have happened" do
+      instance.current_piece = "test"
+      instance.spaces_moved = 20
+      expect(instance.piece_done).to be_nil
+    end
+
+    it "replaces X's with O's" do
+      instance.add_piece("squ", 0)
+      20.times {instance.move_piece}
+      testcase = Array.new(10) {"_"}
+      testcase[0] = "O"
+      testcase[1] = "O"
+      expect(instance.board[20]).to match_array(testcase)
+    end
+  end
 end

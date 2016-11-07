@@ -34,13 +34,35 @@ class Board
 
   def move_piece
     @spaces_moved += 1
+    locations = access_piece
+    locations.each do |coords|
+       @board[coords[0]][coords[1]] = "_"
+       @board[coords[0] + 1][coords[1]] = "X"
+    end
+    piece_done
+  end
+
+  def access_piece
+  list_of_coords = []
     @board.reverse.each_with_index do |array, row|
       array.each_with_index do |entry, cell|
         if entry == "X"
-          @board[20-row][cell] = "_" 
-          @board[22-row][cell] = "X"
+          list_of_coords.push([20-row, cell])
+          # @board[20-row][cell] = "_" 
+          # @board[22-row][cell] = "X"
         end
       end
+    end
+    list_of_coords
+  end
+
+  def piece_done
+    if @spaces_moved == 20 
+      locations = access_piece
+      locations.each do |coords|
+       @board[coords[0]][coords[1]] = "O"
+      end
+      @current_piece = nil
     end
   end
 end
