@@ -22,7 +22,29 @@ describe Board do
       testcase = Array.new(10) {"_"}
       testcase[0] = "X"
       testcase[1] = "X"
-      expect(instance.board[0]).to contain_exactly(testcase)
+      expect(instance.board[0]).to match_array(testcase)
+    end
+  end
+
+  describe "#move_piece" do
+    it "it moves the piece down a level" do
+      instance.add_piece("squ", 0)
+      instance.move_piece
+      testcase = Array.new(10) {"_"}
+      testcase[0] = "X"
+      testcase[1] = "X"
+      expect(instance.board[2]).to match_array(testcase)
+    end
+
+    it "deletes the previous level" do
+      instance.add_piece("squ", 0)
+      instance.move_piece
+      expect(instance.board[0]).to match_array(Array.new(10) {"_"})
+    end
+
+    it "increases spaces moved by 1" do
+      instance.add_piece("squ", 0)
+      expect{instance.move_piece}.to change{instance.spaces_moved}.by(1)
     end
   end
 end
