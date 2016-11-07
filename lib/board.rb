@@ -1,5 +1,6 @@
 #to do
 #delete done rows
+#drop rows above into lower rows when that happens
 #return a score
 #define lose state
 #implement a player who can make moves
@@ -110,12 +111,23 @@ class Board
     end 
   end
 
-  def row_full?
+  def row_full?(row)
 
   end
 
-  def get_columns
-    #returns an array containing the column values of the piece
+  def get_bottom_columns
+    #returns an array containing the column values of the piece's bottom row.
+    bottom = piece_bottom
+    coordinates = access_piece
+    columns = []
+    coordinates.each do |pair|
+      columns.push(pair[1]) if bottom == pair[0]
+    end
+    columns
+  end
+
+  def get_all_columns
+    #returns an array containing the all column values
     coordinates = access_piece
     columns = []
     coordinates.each do |pair|
@@ -126,9 +138,9 @@ class Board
 
   def hit_piece?
     bottom_edge = piece_bottom
-    #scan the row below, if horizontal coord of any O == coord of any X then stop
+    #scan the row below, if it hits a piece, stop. 
     @board[bottom_edge + 1].each_with_index do |cell, cell_number|
-      if cell == "O" && get_columns.include?(cell_number)
+      if cell == "O" && get_bottom_columns.include?(cell_number) 
         puts "We returned true"
         return true
       end

@@ -87,11 +87,20 @@ describe Board do
   end
 
   describe "#row_delete" do
-    it "detects when one row is full and deletes it"
+    it "detects when one row is full and deletes it" do
+      #this test needs to account for dropdown
+      done_row = Array.new(10) {"O"}
+      done_row[0] = "_"
+      done_row[1] = "_"
+      instance.board[20] = done_row
+      expect(instance.board[20]).to eq(Array.new(10) {"_"})
+    end
 
     it "detects when more than one row is full and deletes them"
 
     it "returns number of rows deleted"
+
+    it "moves all the rows down a level when a row is deleted"
   end
   
 end
