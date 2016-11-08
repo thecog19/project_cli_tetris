@@ -9,6 +9,7 @@
 #rotation for pieces
 #player input and controls
 #score system
+#refactor, add tests, break into classes
 #music
 #realtime functionality
 #try curse gem
