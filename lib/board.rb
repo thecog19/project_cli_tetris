@@ -15,6 +15,7 @@ class Board
   attr_accessor :board
   attr_accessor :current_piece
   attr_accessor :spaces_moved
+
   def initialize(board = nil)
     @board = board || Array.new(21){Array.new(10) {"_"}} 
     @pieces = {"squ" => [["X","X"],["X","X"]]}
@@ -48,36 +49,33 @@ class Board
     #moves the piece down vertically. 
     @spaces_moved += 1
     locations = access_piece
-    locations.each do |coords|
-       @board[coords[0]][coords[1]] = "_"
-       @board[coords[0] + 1][coords[1]] = "X"
-    end
+    piece_position_update(locations,+1,0)
     piece_done
+  end
+
+  def piece_position_update(locations, delta_x, delta_y)
+    locations.each do |coords|
+      @board[coords[0]][coords[1]] = "_"
+    end
+    locations.each do |coords|
+      @board[coords[0] + delta_x][coords[1] + delta_y] = "X"
+    end
   end
 
   def move_piece_horizontal(direction = "r")
     #moves the piece left or right, assuming no edges
     locations = access_piece
     if direction == "r"
-      unless locations.any? {|pair| pair[1] == 10}
-        locations.each do |coords|
-          @board[coords[0]][coords[1]] = "_"
-        end
-        locations.each do |coords|
-          @board[coords[0]][coords[1] + 1] = "X"
-        end
+      unless locations.any? {|pair| pair[1] == 9 } #verify you'll be inbounds after movement. 
+        piece_position_update(locations,0,1)
       end
     elsif direction == "l"
-      unless locations.any? {|pair| pair[1] == 10}
-        locations.each do |coords|
-          @board[coords[0]][coords[1]] = "_"
-        end
-        locations.each do |coords|
-          @board[coords[0]][coords[1] - 1] = "X"
-        end
+      unless locations.any? {|pair| pair[1] == 0}
+        piece_position_update(locations,0,-1)
       end
     end
   end
+ 
 
   def piece_done
     #checks to see if the conditions to stop have been met. 
