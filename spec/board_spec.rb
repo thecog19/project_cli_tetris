@@ -1,4 +1,4 @@
-require "board"
+require "tetris"
 
 describe Board do
   let(:instance) {Board.new}
