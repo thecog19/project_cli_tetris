@@ -84,23 +84,85 @@ describe Board do
       testcase[1] = "O"
       expect(instance.board[18]).to match_array(testcase)
     end
+
+    it "checks if we've lost the game" do 
+      #need to refactor this test so it passes, since the code works
+      #use a stub
+      close_row = Array.new(10) {"O"}
+      close_row[4] = "_"
+      instance.board.map! {|row| row = close_row}
+      instance.board[0]
+      expect(instance.piece_done).to eq("game is over")
+    end
+  end
+
+  describe "#row_full?" do
+    it "returns true when a row is full" do 
+      done_row = Array.new(10) {"O"}
+      instance.board[20] = done_row
+      expect(instance.row_full?(20)).to be true
+    end
+
+    it "retruns false when it isn't!" do
+      done_row = Array.new(10) {"O"}
+      done_row[5] = "_"
+      instance.board[20] = done_row
+      expect(instance.row_full?(20)).to be false
+    end
+
   end
 
   describe "#row_delete" do
     it "detects when one row is full and deletes it" do
-      #this test needs to account for dropdown
       done_row = Array.new(10) {"O"}
-      done_row[0] = "_"
-      done_row[1] = "_"
+      testcase = Array.new(10) {"_"}
       instance.board[20] = done_row
-      expect(instance.board[20]).to eq(Array.new(10) {"_"})
+      instance.update_state
+      expect(instance.board[20]).to eq(testcase)
     end
 
-    it "detects when more than one row is full and deletes them"
+    it "detects when more than one row is full and deletes them" do
+      done_row = Array.new(10) {"O"}
+      testcase = Array.new(10) {"_"}
+      instance.board[20] = done_row
+      instance.board[19] = done_row.dup
+      instance.update_state
+      expect(instance.board[20]).to eq(testcase)
+    end
 
-    it "returns number of rows deleted"
-
-    it "moves all the rows down a level when a row is deleted"
+    it "returns number of rows deleted" do
+      done_row = Array.new(10) {"O"}
+      instance.board[20] = done_row
+      instance.board[19] = done_row.dup
+      expect(instance.update_state).to eq(2)
+    end
+    it "moves all the rows down a level when a row is deleted" do
+      weird_row = Array.new(10) {"O"}
+      weird_row[5] = "_"
+      done_row = Array.new(10) {"O"}
+      instance.board[20] = done_row
+      instance.board[19] = done_row.dup
+      instance.board[18] = weird_row
+      instance.update_state
+      expect(instance.board[20]).to eq(weird_row)
+    end
   end
-  
+
+  describe "#move_piece_horizontal" do
+    it "moves the piece to the right" do
+      instance.add_piece("squ", 0)
+      instance.move_piece_horizontal("r")
+      testcase = Array.new(10) {"_"}
+      testcase[1],testcase[2] = "X", "X"
+      expect(instance.board[1]).to eq(testcase)
+    end
+
+    it "moves the piece to the left" do
+      instance.add_piece("squ", 5)
+      instance.move_piece_horizontal("l")
+      testcase = Array.new(10) {"_"}
+      testcase[4],testcase[5] = "X", "X"
+      expect(instance.board[1]).to eq(testcase)
+    end
+  end
 end

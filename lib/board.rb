@@ -1,8 +1,5 @@
 #to do
-#delete done rows
-#drop rows above into lower rows when that happens
 #return a score
-#define lose state
 #implement a player who can make moves
 #once that's done we have tetris, sort of. Square tetris. Strtris
 #more pieces
@@ -33,6 +30,10 @@ class Board
     end
   end
 
+  def defeat?
+    @board[0].any? {|cell| cell == "O"}
+  end
+
   def add_piece(shape = "squ", position)
     #inserts a piece into to the board given the position and shape
     @current_piece = @pieces[shape].dup
@@ -54,16 +55,45 @@ class Board
     piece_done
   end
 
+  def move_piece_horizontal(direction = "r")
+    #moves the piece left or right, assuming no edges
+    locations = access_piece
+    if direction == "r"
+      unless locations.any? {|pair| pair[1] == 10}
+        locations.each do |coords|
+          @board[coords[0]][coords[1]] = "_"
+        end
+        locations.each do |coords|
+          @board[coords[0]][coords[1] + 1] = "X"
+        end
+      end
+    elsif direction == "l"
+      unless locations.any? {|pair| pair[1] == 10}
+        locations.each do |coords|
+          @board[coords[0]][coords[1]] = "_"
+        end
+        locations.each do |coords|
+          @board[coords[0]][coords[1] - 1] = "X"
+        end
+      end
+    end
+  end
+
   def piece_done
     #checks to see if the conditions to stop have been met. 
-    #if they have, runs solidify and start_piece_conds
+    #if they have, runs solidify, update the game state, check for defeat, and start_piece_conds
     if piece_bottom == 20 || hit_piece? 
       solidify
+      update_state
+      return "game is over" if defeat? == true 
       start_piece_conds
     end
   end
 
-  private
+  def row_full?(row)
+    #check to see if the row is all O's
+    @board[row].all? {|cell| cell == "O"} 
+  end
 
   def grid_modify(shape,row,offset)
     #makes changes to the board
@@ -112,10 +142,6 @@ class Board
     end 
   end
 
-  def row_full?(row)
-
-  end
-
   def get_bottom_columns
     #returns an array containing the column values of the piece's bottom row.
     bottom = piece_bottom
@@ -142,16 +168,28 @@ class Board
     #scan the row below, if it hits a piece, stop. 
     @board[bottom_edge + 1].each_with_index do |cell, cell_number|
       if cell == "O" && get_bottom_columns.include?(cell_number) 
-        puts "We returned true"
         return true
       end
     end
     false
   end
+
+  def update_state
+    #updates the state of the board by checking for full rows and clearing them, and then dropping the above row into the below row
+    num_cleared = 0
+    while row_full?(20)
+      @board.pop
+      @board.unshift(Array.new(10) {"_"})
+      num_cleared += 1
+    end
+    num_cleared
+  end
 end
 
-# boar = Board.new
-
+boar = Board.new
+done_row = Array.new(10) {"O"}
+boar.board[20] = done_row
+boar.update_state
 # boar.add_piece("squ", 3)
 # boar.move_piece
 # boar.display
