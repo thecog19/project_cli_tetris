@@ -1,4 +1,4 @@
-require "board"
+require "tetris"
 
 describe Board do
   let(:instance) {Board.new}
@@ -86,12 +86,11 @@ describe Board do
     end
 
     it "checks if we've lost the game" do 
-      #need to refactor this test so it passes, since the code works
-      #use a stub
       close_row = Array.new(10) {"O"}
       close_row[4] = "_"
       instance.board.map! {|row| row = close_row}
       instance.board[0]
+      allow(instance).to receive(:hit_piece?).and_return(true)
       expect(instance.piece_done).to eq("game is over")
     end
   end
