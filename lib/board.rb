@@ -3,6 +3,7 @@
 #implement a player who can make moves
 #once that's done we have tetris, sort of. Square tetris. Strtris
 #more pieces
+#colorize the pieces
 #rotation for pieces
 #player input and controls
 #score system
